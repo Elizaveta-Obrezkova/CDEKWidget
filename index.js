@@ -12,6 +12,7 @@ var widjet = new ISDEKWidjet({
     detailAddress: true,
     goods: packageSize,
     cityFrom: departureAddress,
+    onChooseAddress: onChooseAddress,
     link: 'forpvz',
     path: 'https://widget.cdek.ru/widget/scripts/',
     servicepath: 'https://widget.cdek.ru/widget/scripts/service.php' //ссылка на файл service.php на вашем сайте
@@ -23,12 +24,22 @@ let infoDelivery = [];
 
 function choosePVZ(wat) {
     document.querySelector('.popup__info_type_address').textContent = `${wat.cityName}, ${wat.PVZ.Address}`;
-    document.querySelector('.popup__info_type_timeDelivery').textContent = `${wat.PVZ.WorkTime}`;
+    document.querySelector('.popup__info_type_workTime').textContent = `${wat.PVZ.WorkTime}`;
+    document.querySelector('.popup__info_type_timeDelivery').textContent = `${wat.term} дня`;
     document.querySelector('.popup__info_type_priceDelivery').textContent = `${wat.price} ${wat.currency}`;
     popup.open();
     infoDelivery = wat;
-    /* console.log(infoDelivery); */
 }
+
+function onChooseAddress(wat) {
+    document.querySelector('.popup__info_type_address').textContent = `${wat.cityName}, ${wat.address}`;
+    document.querySelector('.popup__info_type_workTime').textContent = `-`;
+    document.querySelector('.popup__info_type_timeDelivery').textContent = `${wat.term} дня`;
+    document.querySelector('.popup__info_type_priceDelivery').textContent = `${wat.price} ${wat.currency}`;
+    popup.open();
+    infoDelivery = wat;
+}
+
 
 class Popup {
     constructor (popupSelector, submit) {
@@ -67,6 +78,7 @@ class Popup {
     setEventListeners(evt) {
         this._buttonClose.addEventListener('click', () => {
             this.close();
+            console.log(`Заявка ${infoDelivery.id} не оформлена`);
         })
         this._form.addEventListener('submit', (evt) => {
             evt.preventDefault();
@@ -79,6 +91,8 @@ class Popup {
 function checkout() {
     console.log(infoDelivery);
     popup.close();
+    alert('Заявка ' + infoDelivery.id + " принята!");
+
 }
 
 const popup = new Popup('.popup', checkout);
